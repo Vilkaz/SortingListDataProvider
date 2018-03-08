@@ -1,6 +1,5 @@
 package de.vilkas.customSortingComboBox;
 
-import com.vaadin.data.HasValue;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.data.provider.Query;
 import com.vaadin.server.SerializablePredicate;
@@ -10,9 +9,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.BiPredicate;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,14 +29,16 @@ public class SortingDataProvider<T> extends ListDataProvider<T> {
     @Override
     public Stream<T> fetch(Query<T, SerializablePredicate<T>> query) {
         final List<T> items = super.fetch(query).collect(Collectors.toList());
-        final T fit = items.stream()
+
+        final T perfectFit = items.stream()
                 .filter(i -> exactFit.test(i, getFilterText()))
                 .findAny()
                 .orElse(null);
-        if (fit != null) {
-            items.remove(fit);
+
+        if (perfectFit != null) {
+            items.remove(perfectFit);
             List<T> sorted = new ArrayList<>();
-            sorted.add(fit);
+            sorted.add(perfectFit);
             sorted.addAll(items);
             return sorted.stream();
         }
@@ -55,7 +54,7 @@ public class SortingDataProvider<T> extends ListDataProvider<T> {
         } catch (NoSuchFieldException ex) {
             throw new IllegalArgumentException("currentFilterText is no more a Field in Vaadin ComboBox, check the ChangeLog  of Vaadin");
         } catch (IllegalAccessException e1) {
-            throw new IllegalArgumentException("PRoblems with currentFilterText in Vaadin ComboBox, check the ChangeLog of Vaadin");
+            throw new IllegalArgumentException("Problems with currentFilterText in Vaadin ComboBox, check the ChangeLog of Vaadin");
         }
         return filterText == null ? "" : filterText;
     }

@@ -2,10 +2,8 @@ package de.vilkas.customSortingComboBox;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.UI;
+import com.vaadin.ui.*;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -16,34 +14,37 @@ import java.util.Collection;
 public class MainView extends UI {
     @Override
     protected void init(final VaadinRequest vaadinRequest) {
-        Item item1 = new Item(11L, "item", "131211");
-        Item item2 = new Item(12L, "next item", "131211");
-        Item item3 = new Item(13L, "another one", "11121314");
-        Item item4 = new Item(14L, "who cares", "11131214");
-        Collection<Item> items = Arrays.asList(item1, item2, item3, item4);
-        ComboBox<Item> box = new ComboBox<>();
-        box.setDataProvider(new SortingDataProvider<Item>(box, items,
+        Collection<Item> items = createItems();
+        ComboBox<Item> sortedComboBox = createSortingComboBox(items);
+        ComboBox<Item> regularComboBox = createRegularComboBox(items);
+        HorizontalLayout boxLayout = new HorizontalLayout(regularComboBox, sortedComboBox);
+        VerticalLayout mainLayout = new VerticalLayout(boxLayout, new Label("try entering values 11-14 in bouth boxes"));
+        setContent(mainLayout);
+
+    }
+
+    private ComboBox<Item> createRegularComboBox(final Collection<Item> items) {
+        ComboBox<Item> regularComboBox = new ComboBox<>();
+        regularComboBox.setItems(items);
+        regularComboBox.setCaption("regular ComboBox");
+        regularComboBox.setItemCaptionGenerator(i -> i.getId() + ":" + i.getDescription());
+        return regularComboBox;
+    }
+
+    private ComboBox<Item> createSortingComboBox(final Collection<Item> items) {
+        ComboBox<Item> sortedComboBox = new ComboBox<>();
+        sortedComboBox.setDataProvider(new SortingDataProvider<Item>(sortedComboBox, items,
                 (( item, string) ->  item == null ? false : string.equals(String.valueOf(item.getId())))));
-        box.setItemCaptionGenerator(i -> i.getId() + ":" + "name" + " " + i.getDescription());
+        sortedComboBox.setCaption("Sorting ComboBox");
+        sortedComboBox.setItemCaptionGenerator(i -> i.getId() + ":" + i.getDescription());
+        return sortedComboBox;
+    }
 
-//
-//
-//
-//        box.addValueChangeListener(e -> {
-//            System.out.println(e);
-//            try {
-//                final Field currentFilterText = box.getClass().getDeclaredField("currentFilterText");
-//                currentFilterText.setAccessible(true);
-//                final Object wat = currentFilterText.get(box);
-//                System.out.println(currentFilterText);
-//                int a = 1;
-//            } catch (NoSuchFieldException ex) {
-//                ex.printStackTrace();
-//            } catch (IllegalAccessException e1) {
-//                e1.printStackTrace();
-//            }
-//        });
-        setContent(box);
-
+    private Collection<Item> createItems() {
+        Item item1 = new Item(11L, "14131211");
+        Item item2 = new Item(12L, "13141211");
+        Item item3 = new Item(13L,  "11121314");
+        Item item4 = new Item(14L,  "11131214");
+        return Arrays.asList(item1, item2, item3, item4);
     }
 }
