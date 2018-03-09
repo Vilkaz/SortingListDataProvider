@@ -17,9 +17,8 @@ public class MainView extends UI {
         Collection<Item> items = createItems();
         ComboBox<Item> sortedComboBox = createSortingComboBox(items);
         ComboBox<Item> regularComboBox = createRegularComboBox(items);
-        HorizontalLayout boxLayout = new HorizontalLayout(regularComboBox, sortedComboBox);
-        VerticalLayout mainLayout = new VerticalLayout(boxLayout, new Label("try entering values 11-14 in bouth boxes"));
-        setContent(mainLayout);
+        HorizontalLayout boxLayout = new HorizontalLayout(regularComboBox, sortedComboBox,  new Label("try entering values 11-14 in bouth boxes"));
+        setContent(boxLayout);
 
     }
 
@@ -41,10 +40,10 @@ public class MainView extends UI {
     }
 
     private Collection<Item> createItems() {
-        Item item1 = new Item(11L, "14131211");
-        Item item2 = new Item(12L, "13141211");
-        Item item3 = new Item(13L,  "11121314");
-        Item item4 = new Item(14L,  "11131214");
+        Item item1 = new Item(11L, "nivea(14131211)");
+        Item item2 = new Item(12L, "isana(13141211)");
+        Item item3 = new Item(13L,  "bebe(11121314)");
+        Item item4 = new Item(14L,  "olaz(11131214)");
         return Arrays.asList(item1, item2, item3, item4);
     }
 }
